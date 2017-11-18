@@ -1,6 +1,9 @@
 # create-tokens-variables-in-circle-ci
 
-Usage
+#Background story
+Aiming to provision multiple Azure Kubernetes Clusters using CircleCi, we came up with the need to automate the creation of tokens in each of our github projects, hence this script:
+
+# Usage
 ```
  sh circleci.sh yourCircleCiSecretToken yourGithubHandle yourGithubProject
 ```
