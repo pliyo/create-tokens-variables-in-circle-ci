@@ -4,8 +4,14 @@
 Aiming to provision multiple Azure Kubernetes Clusters using CircleCi, we came up with the need to automate the creation of tokens in each of our github projects, hence this script:
 
 # Usage
+Supervised execution (stdin input for token, github handle and project name):
 ```
- sh circleci.sh yourCircleCiSecretToken yourGithubHandle yourGithubProject
+ sh circleci.sh
+```
+
+Set token and account settings ahead of time:
+```
+ sh circleci.sh -t yourCircleCiSecretToken -a yourGithubHandle -p yourGithubProject
 ```
 
 In V.1 you'll need to change the name of the parameters yourself in the code!
