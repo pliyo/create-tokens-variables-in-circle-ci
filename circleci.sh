@@ -1,14 +1,72 @@
-echo $1 $2 $3 
-# $1 CircleCIToken
-# $2 UserName
-# $3 Project
+#!/bin/bash
+set -euo pipefail
 
 
-curl -X POST --header "Content-Type: application/json" -d '{"name":"CLUSTER_LOCATION", "value":"westus2"}' https://circleci.com/api/v1.1/project/github/$2/$3/envvar?circle-token=$1
-curl -X POST --header "Content-Type: application/json" -d '{"name":"CLUSTER_NAME", "value":"yourclustername"}' https://circleci.com/api/v1.1/project/github/$2/$3/envvar?circle-token=$1
-curl -X POST --header "Content-Type: application/json" -d '{"name":"CONTAINER_REPOSITORY", "value":"your-repository"}' https://circleci.com/api/v1.1/project/github/$2/$3/envvar?circle-token=$1
-curl -X POST --header "Content-Type: application/json" -d '{"name":"KEYUVAULT_NAME", "value":"np-team-keyvault-wus2"}' https://circleci.com/api/v1.1/project/github/$2/$3/envvar?circle-token=$1
-curl -X POST --header "Content-Type: application/json" -d '{"name":"RESOURCE_GROUP", "value":"np-team-cluster-wus2-rg"}' https://circleci.com/api/v1.1/project/github/$2/$3/envvar?circle-token=$1
-curl -X POST --header "Content-Type: application/json" -d '{"name":"SERVICE_PRINCIPAL", "value":"xxx"}' https://circleci.com/api/v1.1/project/github/$2/$3/envvar?circle-token=$1
-curl -X POST --header "Content-Type: application/json" -d '{"name":"SERVICE_PRINCIPAL_PASS", "value":"xxx"}' https://circleci.com/api/v1.1/project/github/$2/$3/envvar?circle-token=$1
-curl -X POST --header "Content-Type: application/json" -d '{"name":"SERVICE_TENANT", "value":"xxx"}' https://circleci.com/api/v1.1/project/github/$2/$3/envvar?circle-token=$1
+# Set all your variables in the key-value array below:
+#declare -a variables
+#variables['ABC']="value 123"
+#variables['DEF']="value DEF"
+variables="ABC=123 BCD=654"
+
+usage() { echo "Usage: $0 -t <circleCiToken> -a <githubAccountName> -p <projectName>" 1>&2; exit 1; }
+
+declare circleCiToken=""
+declare githubAccountName=""
+declare projectName=""
+
+# Initialize parameters specified from command line
+while getopts ":t:a:p:" arg; do
+	case "${arg}" in
+		t)
+			circleCiToken=${OPTARG}
+			;;
+		a)
+			githubAccountName=${OPTARG}
+			;;
+		p)
+			projectName=${OPTARG}
+			;;
+		esac
+done
+shift $((OPTIND-1))
+
+#Prompt for parameters if some required parameters are missing
+if [[ -z "$circleCiToken" ]]; then
+	echo "Circle CI Token:"
+	read circleCiToken
+	[[ "${circleCiToken:?}" ]]
+fi
+
+if [[ -z "$githubAccountName" ]]; then
+        echo "Github Account Name:"
+        read githubAccountName
+        [[ "${githubAccountName:?}" ]]
+fi
+
+if [[ -z "$projectName" ]]; then
+        echo "Project Name:"
+        read projectName
+        [[ "${projectName:?}" ]]
+fi
+
+
+posturl="https://circleci.com/api/v1.1/project/github/$githubAccountName/$projectName/envvar?circle-token=$circleCiToken"
+
+
+echo "Loading environment variables into project $githubAccountName/$projectName:"
+
+for variable in $variables;
+do
+    
+    set -- `echo $variable | tr '=' ' '`
+    echo curl -X POST --header "Content-Type: application/json" -d "{\"name\":\"$1\", \"value\":\"$2\"}" $posturl
+
+done
+
+echo
+if [ $?  == 0 ];
+ then
+	echo "Environment variables loaded successfully."
+fi
+
+
