@@ -52,18 +52,19 @@ posturl="https://circleci.com/api/v1.1/project/github/$githubAccountName/$projec
 
 echo "Loading environment variables into project $githubAccountName/$projectName:"
 
+response="";
 for variable in $variables;
 do
     
     set -- `echo $variable | tr '=' ' '`
-    curl -X POST --header "Content-Type: application/json" -d "{\"name\":\"$1\", \"value\":\"$2\"}" $posturl
-
+    response+=$(curl -X POST --header "Content-Type: application/json" -d "{\"name\":\"$1\", \"value\":\"$2\"}" $posturl)
 done
 
-echo
-if [ $?  == 0 ];
- then
-	echo "Environment variables loaded successfully."
+
+if [[ $response == *"Not Found"* && $response == *"https://developer.github.com/v3"* ]]; then
+  echo "Failed to find project, please check parameters again!"
+else
+  echo "Environment variables loaded successfully."
 fi
 
 
