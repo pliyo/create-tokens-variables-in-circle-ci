@@ -3,9 +3,6 @@ set -euo pipefail
 
 
 # Set all your variables in the key-value array below:
-#declare -a variables
-#variables['ABC']="value 123"
-#variables['DEF']="value DEF"
 variables="ABC=123 BCD=654"
 
 usage() { echo "Usage: $0 -t <circleCiToken> -a <githubAccountName> -p <projectName>" 1>&2; exit 1; }
@@ -59,7 +56,7 @@ for variable in $variables;
 do
     
     set -- `echo $variable | tr '=' ' '`
-    echo curl -X POST --header "Content-Type: application/json" -d "{\"name\":\"$1\", \"value\":\"$2\"}" $posturl
+    curl -X POST --header "Content-Type: application/json" -d "{\"name\":\"$1\", \"value\":\"$2\"}" $posturl
 
 done
 
