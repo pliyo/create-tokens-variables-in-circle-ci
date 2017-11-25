@@ -11,7 +11,7 @@ Supervised execution (stdin input for token, github handle and project name):
 
 Set token and account settings ahead of time:
 ```
- sh circleci.sh -t yourCircleCiSecretToken -a yourGithubHandle -p yourGithubProject
+ sh circleci.sh -t yourCircleCiSecretToken -a yourGithubHandle -p yourGithubProject -v key1=value2
 ```
 
 In V.1 you'll need to change the name of the parameters yourself in the code!

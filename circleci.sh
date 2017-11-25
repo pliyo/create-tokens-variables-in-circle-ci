@@ -3,16 +3,16 @@ set -euo pipefail
 
 
 # Set all your variables in the key-value array below:
-variables="ABC=123 BCD=654"
+declare variables="ABC=123 BCD=654"
 
-usage() { echo "Usage: $0 -t <circleCiToken> -a <githubAccountName> -p <projectName>" 1>&2; exit 1; }
+usage() { echo "Usage: $0 -t <circleCiToken> -a <githubAccountName> -p <projectName> -v <key1=value1 key2=value2>" 1>&2; exit 1; }
 
 declare circleCiToken=""
 declare githubAccountName=""
 declare projectName=""
 
 # Initialize parameters specified from command line
-while getopts ":t:a:p:" arg; do
+while getopts ":t:a:p:v:" arg; do
 	case "${arg}" in
 		t)
 			circleCiToken=${OPTARG}
@@ -22,6 +22,9 @@ while getopts ":t:a:p:" arg; do
 			;;
 		p)
 			projectName=${OPTARG}
+			;;
+		v)
+			variables=${OPTARG}
 			;;
 		esac
 done
