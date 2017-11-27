@@ -1,10 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-
-# Set all your variables in the key-value array below:
-variables="ABC=123 BCD=654"
-
 usage() { echo "Usage: $0 -t <circleCiToken> -a <githubAccountName> -p <projectName>" 1>&2; exit 1; }
 
 declare circleCiToken=""
@@ -49,16 +45,15 @@ fi
 
 posturl="https://circleci.com/api/v1.1/project/github/$githubAccountName/$projectName/envvar?circle-token=$circleCiToken"
 
-
 echo "Loading environment variables into project $githubAccountName/$projectName:"
 
-for variable in $variables;
+# Iterate through your variables in config.txt and upload them to circle ci
+# They need to be in the shape of "VARIABLE_NAME|VALUE"
+IFS="|"
+while read -r name value
 do
-    
-    set -- `echo $variable | tr '=' ' '`
-    curl -X POST --header "Content-Type: application/json" -d "{\"name\":\"$1\", \"value\":\"$2\"}" $posturl
-
-done
+curl -X POST --header "Content-Type: application/json" -d "{\"name\":\"$name\", \"value\":\"$value\"}" $posturl
+done < config.txt
 
 echo
 if [ $?  == 0 ];
