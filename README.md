@@ -1,7 +1,7 @@
 # create-tokens-variables-in-circle-ci
 
 # Background story
-Aiming to provision multiple Azure Kubernetes Clusters using CircleCi, we came up with the need to automate the creation of tokens in each of our github projects, hence this script:
+Aiming to automate the process to set up a project in CircleCi with the right environment variables, we came up with the need to automate the creation of tokens in each of our github projects, hence this script:
 
 # Usage
 Supervised execution (stdin input for token, github handle and project name):
@@ -14,8 +14,7 @@ Set token and account settings ahead of time:
  sh circleci.sh -t yourCircleCiSecretToken -a yourGithubHandle -p yourGithubProject
 ```
 
-In V.1 you'll need to change the name of the parameters yourself in the code!
+Your variables will be in the `config.txt` in the shape of `VARIABLE_NAME|VALUE`. Put as many as you want! And leave one space behind so they script doesn't eat the first letter :burger:
 
 # What's coming next:
-1. Provide this set of token-values in a json, iterate over them, and send them as needed.
-2. Allow bitbuket integration  
+1. Allow bitbuket integration  
